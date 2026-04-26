@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: escuela_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: escuela
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 123
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  backend:
+    build: .
+    container_name: escuela_api
+    depends_on:
+      - db
+    ports:
+      - "5000:5000"
+    environment:
+      DB_USER: user
+      DB_PASSWORD: 123
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: escuela
+      JWT_SECRET_KEY: fdceadc90602ed148c5c43574dba15abcef58ecc2869aa908434b4db0e588289
+      SECRET_KEY: 85c65fe4ded1b7a86c9af40d21a7873af3f581dcc19dcc2b97f4e6e75c6b204c
+volumes:
+  db_data:
